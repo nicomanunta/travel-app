@@ -13,7 +13,7 @@ class UpdateDayRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,17 @@ class UpdateDayRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'date' => 'required|date|after_or_equal:today',
+        ];
+    }
+    public function messages()
+    {
+        return [
+            'trip_id.required' => 'L\'ID del viaggio è obbligatorio.',
+            'trip_id.exists' => 'Il viaggio selezionato non esiste.',
+            'date.required' => 'La data della giornata è obbligatoria.',
+            'date.date' => 'La data della giornata deve essere una data valida.',
+            'date.after_or_equal' => 'La data della giornata deve essere oggi o successiva.',
         ];
     }
 }

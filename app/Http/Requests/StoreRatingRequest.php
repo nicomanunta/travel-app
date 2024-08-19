@@ -13,7 +13,7 @@ class StoreRatingRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,19 @@ class StoreRatingRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'rating' => 'required|integer|min:1|max:5',
         ];
     }
+    public function messages()
+    {
+        return [
+            'stop_id.required' => 'L\'ID della tappa è obbligatorio.',
+            'stop_id.exists' => 'La tappa selezionata non esiste.',
+            'rating.required' => 'La valutazione è obbligatoria.',
+            'rating.integer' => 'La valutazione deve essere un numero intero.',
+            'rating.min' => 'La valutazione deve essere almeno 1.',
+            'rating.max' => 'La valutazione non può essere superiore a 5.',
+        ];
+    }
+
 }
