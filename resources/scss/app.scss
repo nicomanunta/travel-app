@@ -1,1 +1,56 @@
-@import '~bootstrap/scss/bootstrap'
+@import '~bootstrap/scss/bootstrap';
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+// PRIMI DATI
+// font
+.font-roboto {
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+.font-montserrat {
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+h1{
+    font-size: 26px;
+}
+h2{
+    font-size: 22px;
+}
+h3{
+    font-size: 18px;
+}
+.text-first{
+    font-size: 16px;
+}
+.text-secondary{
+    font-size: 13px;
+}
+
+// color
+//text
+.text-blue{
+    color: #005f73;
+}
+.text-yellow{
+    color: #ffcb69;
+}
+.text-green{
+    color: #2a9d8f;
+}
+//background
+.bg-blue{
+    background-color: #005f73;
+}
+.bg-yellow{
+    background-color: #ffcb69;
+}
+.bg-green{
+    background-color: #2a9d8f;
+}
+
+
