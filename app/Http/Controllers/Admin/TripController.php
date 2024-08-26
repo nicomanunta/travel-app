@@ -6,6 +6,7 @@ use App\Http\Requests\StoreTripRequest;
 use App\Http\Requests\UpdateTripRequest;
 use App\Models\Trip;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Support\Str;
 
 class TripController extends Controller
@@ -17,7 +18,9 @@ class TripController extends Controller
      */
     public function index()
     {
-        //
+        $trips = Trip::where('user_id', auth()->id())->get();
+       
+        return view('admin.trips.index', compact('trips'));
     }
 
     /**
@@ -27,7 +30,9 @@ class TripController extends Controller
      */
     public function create()
     {
-        //
+        $users= User::all();
+        
+        return view('admin.trips.create', compact('users'));
     }
 
     /**

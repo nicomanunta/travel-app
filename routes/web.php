@@ -2,6 +2,12 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\TripController;
+use App\Http\Controllers\Admin\DayController;
+use App\Http\Controllers\Admin\StopController;
+use App\Http\Controllers\Admin\NoteController;
+use App\Http\Controllers\Admin\RatingController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +25,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('admin.trips.index');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->name('admin.')->group(function () {
