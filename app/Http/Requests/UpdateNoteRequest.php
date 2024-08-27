@@ -24,17 +24,14 @@ class UpdateNoteRequest extends FormRequest
     public function rules()
     {
         return [
-            'content' => 'required|string|max:1000',
+            'content' => 'required|string',
         ];
     }
     public function messages()
     {
         return [
-            'stop_id.required' => 'L\'ID della tappa è obbligatorio.',
-            'stop_id.exists' => 'La tappa selezionata non esiste.',
             'content.required' => 'Il contenuto della nota è obbligatorio.',
             'content.string' => 'Il contenuto della nota deve essere una stringa.',
-            'content.max' => 'Il contenuto della nota non può superare i 1000 caratteri.',
         ];
     }
 }

@@ -26,8 +26,9 @@ class StoreTripRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'start_date' => 'required|date|after_or_equal:today',
+            'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
     }
     public function messages(){
@@ -37,10 +38,12 @@ class StoreTripRequest extends FormRequest
             'title.max' => 'Il titolo non può superare i 255 caratteri.',
             'start_date.required' => 'La data di inizio è obbligatoria.',
             'start_date.date' => 'La data di inizio deve essere una data valida.',
-            'start_date.after_or_equal' => 'La data di inizio deve essere oggi o successiva.',
             'end_date.required' => 'La data di fine è obbligatoria.',
             'end_date.date' => 'La data di fine deve essere una data valida.',
             'end_date.after_or_equal' => 'La data di fine deve essere uguale o successiva alla data di inizio.',
+            'cover_image.image' => 'Il campo immagine di copertura deve essere un’immagine.',
+            'cover_image.mimes' => 'L’immagine di copertura deve essere un file di tipo jpeg, png, jpg o gif.',
+            'cover_image.max' => 'L’immagine di copertura non può superare i 2048 KB.',
         ];
     }
 }

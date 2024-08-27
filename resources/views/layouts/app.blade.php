@@ -47,7 +47,7 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
-                            <a class="nav-link font-montserrat text-yellow fw-bold" href="{{url('/') }}">{{ __('Home') }}</a>
+                            <a class="nav-link font-montserrat text-yellow fw-bold" href="{{url('/dashboard') }}">{{ __('Home') }}</a>
                         </li>
                         <!-- Authentication Links -->
                         @guest

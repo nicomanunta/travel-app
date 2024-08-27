@@ -18,11 +18,11 @@ return new class extends Migration
             $table->foreignId('day_id')->constrained()->onDelete('cascade');
             $table->string('title');
             $table->text('description')->nullable();
-            $table->decimal('latitude', 10, 8);
-            $table->decimal('longitude', 11, 8);
-            $table->string('image_url')->nullable();
-            $table->string('food')->nullable();
+            $table->string('image')->nullable();
+            $table->text('food')->nullable();
             $table->text('curiosities')->nullable();
+            $table->decimal('latitude', 10, 7);
+            $table->decimal('longitude', 10, 7);
             $table->timestamps();
         });
     }

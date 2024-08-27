@@ -30,11 +30,10 @@ class StoreNoteRequest extends FormRequest
     public function messages()
     {
         return [
-            'stop_id.required' => 'L\'ID della tappa è obbligatorio.',
-            'stop_id.exists' => 'La tappa selezionata non esiste.',
+            
             'content.required' => 'Il contenuto della nota è obbligatorio.',
             'content.string' => 'Il contenuto della nota deve essere una stringa.',
-            'content.max' => 'Il contenuto della nota non può superare i 1000 caratteri.',
+            
         ];
     }
 
