@@ -1,4 +1,5 @@
 @extends('layouts.app')
+
 @section('content')
 <div class="container">
     <h1 class="my-4 text-center">Pianifica un Nuovo Viaggio</h1>
@@ -8,17 +9,17 @@
 
         <!-- Dettagli del Viaggio -->
         <div class="form-group mb-3">
-            <label for="trip_title">Nome del Viaggio</label>
-            <input type="text" class="form-control @error('trip_title') is-invalid @enderror" id="trip_title" name="trip_title" value="{{ old('trip_title') }}" required>
-            @error('trip_title')
+            <label for="title">Nome del Viaggio</label>
+            <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" value="{{ old('title') }}" required>
+            @error('title')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
 
         <div class="form-group mb-3">
-            <label for="trip_description">Descrizione</label>
-            <textarea class="form-control @error('trip_description') is-invalid @enderror" id="trip_description" name="trip_description" rows="4" required>{{ old('trip_description') }}</textarea>
-            @error('trip_description')
+            <label for="description">Descrizione</label>
+            <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="4">{{ old('description') }}</textarea>
+            @error('description')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
@@ -111,6 +112,22 @@
                             @enderror
                         </div>
 
+                        <div class="form-group mb-3">
+                            <label for="latitude_1">Latitudine</label>
+                            <input type="text" class="form-control @error('latitude.*') is-invalid @enderror" name="latitude[]" value="{{ old('latitude.0') }}">
+                            @error('latitude.*')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="longitude_1">Longitudine</label>
+                            <input type="text" class="form-control @error('longitude.*') is-invalid @enderror" name="longitude[]" value="{{ old('longitude.0') }}">
+                            @error('longitude.*')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
                         <!-- Note -->
                         <div class="form-group mb-3">
                             <label for="note_1">Note</label>
@@ -141,8 +158,7 @@
         </div>
         <div class="d-flex justify-content-between my-2">
             <button type="button" class="btn btn-blue add-day-btn">Aggiungi Giornata</button>
-    
-            <button type="submit" class="btn btn-green ">Crea Viaggio</button>
+            <button type="submit" class="btn btn-green">Crea Viaggio</button>
         </div>
     </form>
 </div>

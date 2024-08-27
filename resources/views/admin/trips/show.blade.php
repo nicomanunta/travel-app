@@ -1,4 +1,4 @@
-@extends('layouts.style')
+@extends('layouts.app')
 @section('content')
     show
 @endsection

@@ -24,9 +24,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('admin.trips.index');
-})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/dashboard', [TripController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+
 
 Route::middleware(['auth', 'verified'])->name('admin.')->group(function () {
     Route::resource('trips', TripController::class);
@@ -35,6 +35,7 @@ Route::middleware(['auth', 'verified'])->name('admin.')->group(function () {
     Route::resource('notes', NoteController::class);
     Route::resource('ratings', RatingController::class);
 });
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

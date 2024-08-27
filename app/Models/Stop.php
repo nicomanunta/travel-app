@@ -9,7 +9,7 @@ class Stop extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['day_id', 'title', 'description', 'latitude', 'longitude', 'image_url', 'food', 'curiosities'];
+    protected $fillable = ['day_id', 'title', 'description', 'latitude', 'longitude', 'image', 'food', 'curiosities'];
 
     public function day(){
         return $this->belongsTo(Day::class);

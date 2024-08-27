@@ -47,21 +47,21 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
-                            <a class="nav-link font-montserrat text-yellow fw-bold" href="{{url('/dashboard') }}">{{ __('Home') }}</a>
+                            <a class="nav-link font-montserrat text-blue fw-bold navbar-hover" href="{{url('/dashboard') }}">{{ __('Home') }}</a>
                         </li>
                         <!-- Authentication Links -->
                         @guest
                         <li class="nav-item">
-                            <a class="nav-link font-montserrat text-yellow fw-bold" href="{{ route('login') }}">{{ __('Login') }}</a>
+                            <a class="nav-link font-montserrat text-blue fw-bold navbar-hover" href="{{ route('login') }}">{{ __('Accedi') }}</a>
                         </li>
                         @if (Route::has('register'))
                         <li class="nav-item">
-                            <a class="nav-link font-montserrat text-yellow fw-bold" href="{{ route('register') }}">{{ __('Register') }}</a>
+                            <a class="nav-link font-montserrat text-blue fw-bold navbar-hover" href="{{ route('register') }}">{{ __('Registrati') }}</a>
                         </li>
                         @endif
                         @else
                         <li class="nav-item dropdown font-montserrat fw-bold">
-                            <a id="navbarDropdown " class="nav-link dropdown-toggle text-yellow " href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            <a id="navbarDropdown " class="nav-link dropdown-toggle text-blue navbar-hover" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                 {{ Auth::user()->name }}
                             </a>
 

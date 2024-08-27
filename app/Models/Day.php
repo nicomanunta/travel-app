@@ -9,7 +9,7 @@ class Day extends Model
 {
     use HasFactory;
     
-    protected $fillable = ['trip_id', 'date'];
+    protected $fillable = ['trip_id', 'title', 'date'];
 
     public function trip(){
         return $this->belongsTo(Trip::class);

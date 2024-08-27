@@ -9,7 +9,7 @@ class Rating extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['stop_id', 'user_id', 'rating' ];
+    protected $fillable = ['stop_id', 'user_id', 'value' ];
 
     public function stop(){
         return $this->belongsTo(Stop::class);
