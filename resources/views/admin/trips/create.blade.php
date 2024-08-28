@@ -52,8 +52,9 @@
         <h3 class="my-4">Giornate del Viaggio</h3>
         <div id="days-container">
             <div class="day-entry">
+                <input type="" name="day_index[]" value="0">
                 <div class="form-group mb-3">
-                    <label for="day_title_1">Titolo della Giornata</label>
+                    <label for="day_title_0">Titolo della Giornata</label>
                     <input type="text" class="form-control @error('day_title.*') is-invalid @enderror" name="day_title[]" value="{{ old('day_title.0') }}" required>
                     @error('day_title.*')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -61,7 +62,7 @@
                 </div>
 
                 <div class="form-group mb-3">
-                    <label for="day_date_1">Data</label>
+                    <label for="day_date_0">Data</label>
                     <input type="date" class="form-control @error('day_date.*') is-invalid @enderror" name="day_date[]" value="{{ old('day_date.0') }}" required>
                     @error('day_date.*')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -72,66 +73,52 @@
                 <h3 class="my-4">Tappe della Giornata</h3>
                 <div class="stops-container">
                     <div class="stop-entry">
+                        <input type="" name="stop_day_index[0][]" value="0">
                         <div class="form-group mb-3">
-                            <label for="stop_title_1">Titolo della Tappa</label>
-                            <input type="text" class="form-control @error('stop_title.*') is-invalid @enderror" name="stop_title[]" value="{{ old('stop_title.0') }}" required>
+                            <label for="stop_title_0">Titolo della Tappa</label>
+                            <input type="text" class="form-control @error('stop_title.*') is-invalid @enderror" name="stop_title[0][]" value="{{ old('stop_title.0') }}" required>
                             @error('stop_title.*')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="stop_description_1">Descrizione</label>
-                            <textarea class="form-control @error('stop_description.*') is-invalid @enderror" name="stop_description[]" rows="2">{{ old('stop_description.0') }}</textarea>
+                            <label for="stop_description_0">Descrizione</label>
+                            <textarea class="form-control @error('stop_description.*') is-invalid @enderror" name="stop_description[0][]" rows="2">{{ old('stop_description.0') }}</textarea>
                             @error('stop_description.*')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="stop_image_1">Immagine della Tappa</label>
-                            <input type="file" class="form-control-file @error('stop_image.*') is-invalid @enderror" name="stop_image[]" accept="image/*">
+                            <label for="stop_image_0">Immagine della Tappa</label>
+                            <input type="file" class="form-control-file @error('stop_image.*') is-invalid @enderror" name="stop_image[0][]" accept="image/*">
                             @error('stop_image.*')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="food_1">Cibo</label>
-                            <input type="text" class="form-control @error('food.*') is-invalid @enderror" name="food[]" value="{{ old('food.0') }}">
+                            <label for="food_0">Cibo</label>
+                            <input type="text" class="form-control @error('food.*') is-invalid @enderror" name="food[0][]" value="{{ old('food.0') }}">
                             @error('food.*')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="curiosities_1">Curiosità</label>
-                            <input type="text" class="form-control @error('curiosities.*') is-invalid @enderror" name="curiosities[]" value="{{ old('curiosities.0') }}">
+                            <label for="curiosities_0">Curiosità</label>
+                            <input type="text" class="form-control @error('curiosities.*') is-invalid @enderror" name="curiosities[0][]" value="{{ old('curiosities.0') }}">
                             @error('curiosities.*')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <div class="form-group mb-3">
-                            <label for="latitude_1">Latitudine</label>
-                            <input type="text" class="form-control @error('latitude.*') is-invalid @enderror" name="latitude[]" value="{{ old('latitude.0') }}">
-                            @error('latitude.*')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label for="longitude_1">Longitudine</label>
-                            <input type="text" class="form-control @error('longitude.*') is-invalid @enderror" name="longitude[]" value="{{ old('longitude.0') }}">
-                            @error('longitude.*')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
 
                         <!-- Note -->
                         <div class="form-group mb-3">
-                            <label for="note_1">Note</label>
-                            <textarea class="form-control @error('note.*') is-invalid @enderror" name="note[]" rows="2">{{ old('note.0') }}</textarea>
+                            <label for="note_0">Note</label>
+                            <textarea class="form-control @error('note.*') is-invalid @enderror" name="note[0][]" rows="2">{{ old('note.0') }}</textarea>
                             @error('note.*')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -139,8 +126,8 @@
 
                         <!-- Valutazione -->
                         <div class="form-group mb-3">
-                            <label for="rating_1">Valutazione (1-5)</label>
-                            <select class="form-control @error('rating.*') is-invalid @enderror" name="rating[]">
+                            <label for="rating_0">Valutazione (1-5)</label>
+                            <select class="form-control @error('rating.*') is-invalid @enderror" name="rating[0][]">
                                 <option value="1" {{ old('rating.0') == 1 ? 'selected' : '' }}>1</option>
                                 <option value="2" {{ old('rating.0') == 2 ? 'selected' : '' }}>2</option>
                                 <option value="3" {{ old('rating.0') == 3 ? 'selected' : '' }}>3</option>
@@ -166,19 +153,43 @@
 <!-- JavaScript per aggiungere dinamicamente giornate e tappe -->
 <script>
     document.querySelector('.add-day-btn').addEventListener('click', function() {
-        let dayContainer = document.getElementById('days-container');
-        let newDay = document.querySelector('.day-entry').cloneNode(true);
-        newDay.querySelectorAll('input, textarea').forEach(input => input.value = '');
-        dayContainer.appendChild(newDay);
+    let dayContainer = document.getElementById('days-container');
+    let newDay = document.querySelector('.day-entry').cloneNode(true);
+
+    // Azzera i valori degli input per la nuova giornata
+    newDay.querySelectorAll('input, textarea').forEach(input => input.value = '');
+
+    // Aggiungi un nuovo indice alla giornata
+    let dayIndex = dayContainer.children.length;
+    newDay.querySelectorAll('.stop-entry').forEach(stopEntry => {
+        let stopDayIndexInput = stopEntry.querySelector('input[name="stop_day_index[]"]');
+        if (stopDayIndexInput) {
+            stopDayIndexInput.value = dayIndex;
+        }
     });
 
-    document.querySelectorAll('.add-stop-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            let stopContainer = this.previousElementSibling;
-            let newStop = stopContainer.querySelector('.stop-entry').cloneNode(true);
-            newStop.querySelectorAll('input, textarea').forEach(input => input.value = '');
-            stopContainer.appendChild(newStop);
-        });
+    dayContainer.appendChild(newDay);
+});
+
+document.querySelectorAll('.add-stop-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        let stopContainer = this.previousElementSibling;
+        let newStop = stopContainer.querySelector('.stop-entry').cloneNode(true);
+
+        // Azzera i valori degli input per la nuova tappa
+        newStop.querySelectorAll('input, textarea').forEach(input => input.value = '');
+
+        // Aggiorna l'indice della giornata per la nuova tappa
+        let dayIndex = Array.from(document.getElementById('days-container').children).indexOf(stopContainer.closest('.day-entry'));
+        let stopDayIndexInput = newStop.querySelector('input[name="stop_day_index[]"]');
+        if (stopDayIndexInput) {
+            stopDayIndexInput.value = dayIndex;
+        }
+
+        stopContainer.appendChild(newStop);
     });
+});
+
+
 </script>
 @endsection

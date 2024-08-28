@@ -38,15 +38,14 @@
                                 @endif
                                 <p><strong>Cibo:</strong> {{ $stop->food }}</p>
                                 <p><strong>Curiosità:</strong> {{ $stop->curiosities }}</p>
-                                <p><strong>Latitudine:</strong> {{ $stop->latitude }}</p>
-                                <p><strong>Longitudine:</strong> {{ $stop->longitude }}</p>
+                                
                             </div>
-                        @endforeach
-                        @foreach ($stop->notes as $note)
+                            @foreach ($stop->notes as $note)
                             <p><strong>Note:</strong> {{ $note->content }}</p>
-                        @endforeach
-                        @foreach ($stop->ratings as $rating)
+                            @endforeach
+                            @foreach ($stop->ratings as $rating)
                             <p><strong>Valutazione:</strong> {{ $rating->value}}/5</p>
+                            @endforeach
                         @endforeach
                         
                     </div>

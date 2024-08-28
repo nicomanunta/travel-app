@@ -51,75 +51,79 @@ class TripController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(StoreTripRequest $request)
-    {
-        // Raccogli tutti i dati dal form
-        $form_data = $request->all();
+{
+    // Raccogli tutti i dati dal form
+    $form_data = $request->all();
 
-        // Crea un nuovo oggetto Trip e assegna i dati
-        $trip = new Trip();
-        $trip->title = $form_data['title'];
-        $trip->description = $form_data['description'];
-        $trip->start_date = $form_data['start_date'];
-        $trip->end_date = $form_data['end_date'];
-        $trip->user_id = auth()->user()->id; // Associa il viaggio all'utente autenticato
+  
 
-        // Gestione dell'immagine di copertina (se presente)
-        if ($request->hasFile('cover_image')) {
-            $coverImagePath = $request->file('cover_image')->store('cover_images', 'public');
-            $trip->cover_image = $coverImagePath;
-        }
 
-        // Salva il viaggio nel database
-        $trip->save();
+    // Crea un nuovo oggetto Trip e assegna i dati
+    $trip = new Trip();
+    $trip->title = $form_data['title'];
+    $trip->description = $form_data['description'];
+    $trip->start_date = $form_data['start_date'];
+    $trip->end_date = $form_data['end_date'];
+    $trip->user_id = auth()->user()->id; // Associa il viaggio all'utente autenticato
 
-        // Salva le giornate del viaggio
-        foreach ($form_data['day_title'] as $index => $dayTitle) {
-            $day = new Day();
-            $day->title = $dayTitle;
-            $day->date = $form_data['day_date'][$index];
-            $trip->days()->save($day); // Collega la giornata al viaggio
+    // Gestione dell'immagine di copertura (se presente)
+    if ($request->hasFile('cover_image')) {
+        $coverImagePath = $request->file('cover_image')->store('cover_images', 'public');
+        $trip->cover_image = $coverImagePath;
+    }
 
-            // Salva le tappe della giornata
-            foreach ($form_data['stop_title'] as $stopIndex => $stopTitle) {
-                // Esegui solo per le tappe relative alla giornata corrente
-                if ($stopIndex == $index) {
-                    $stop = new Stop();
-                    $stop->title = $stopTitle;
-                    $stop->description = $form_data['stop_description'][$stopIndex];
-                    $stop->food = $form_data['food'][$stopIndex];
-                    $stop->curiosities = $form_data['curiosities'][$stopIndex];
-                    $stop->latitude = $form_data['latitude'][$stopIndex];
-                    $stop->longitude = $form_data['longitude'][$stopIndex];
+    // Salva il viaggio nel database
+    $trip->save();
 
-                    // Gestione dell'immagine della tappa (se presente)
-                    if ($request->hasFile('stop_image.' . $stopIndex)) {
-                        $stopImagePath = $request->file('stop_image.' . $stopIndex)->store('stop_images', 'public');
-                        $stop->image = $stopImagePath;
-                    }
+    // Salva le giornate del viaggio
+    foreach ($form_data['day_title'] as $dayIndex => $dayTitle) {
+        $day = new Day();
+        $day->title = $dayTitle;
+        $day->date = $form_data['day_date'][$dayIndex];
+        $trip->days()->save($day); // Collega la giornata al viaggio
 
-                    $day->stops()->save($stop); // Collega la tappa alla giornata
+        // Salva le tappe della giornata
+        foreach ($form_data['stop_day_index'][0] as $stopIndex => $stopDayIndex) {
+            if ($stopDayIndex == $dayIndex) {
+                $stop = new Stop();
+                $stop->title = $form_data['stop_title'][0][$stopIndex] ?? null;
+                $stop->description = $form_data['stop_description'][0][$stopIndex] ?? null;
+                $stop->food = $form_data['food'][0][$stopIndex] ?? null;
+                $stop->curiosities = $form_data['curiosities'][0][$stopIndex] ?? null;
 
-                    // Salva la nota e la valutazione se presenti
-                    if (!empty($form_data['note'][$stopIndex])) {
-                        $note = new Note();
-                        $note->content = $form_data['note'][$stopIndex];
-                        $stop->notes()->save($note); // Collega la nota alla tappa
-                    }
+                // Gestione dell'immagine della tappa (se presente)
+                if (isset($form_data['stop_image'][0][$stopIndex])) {
+                    $stopImagePath = $form_data['stop_image'][0][$stopIndex]->store('stop_images', 'public');
+                    $stop->image = $stopImagePath;
+                }
 
-                    if (!empty($form_data['rating'][$stopIndex])) {
-                        $rating = new Rating();
-                        $rating->value = $form_data['rating'][$stopIndex];
-                        $rating->user_id = auth()->user()->id; // Aggiungi l'ID dell'utente
-                        $stop->ratings()->save($rating); // Collega la valutazione alla tappa
-                         
-                    }
+                $day->stops()->save($stop); // Collega la tappa alla giornata
+
+                // Salva la nota e la valutazione se presenti
+                if (!empty($form_data['note'][0][$stopIndex])) {
+                    $note = new Note();
+                    $note->content = $form_data['note'][0][$stopIndex];
+                    $stop->notes()->save($note); // Collega la nota alla tappa
+                }
+
+                if (!empty($form_data['rating'][0][$stopIndex])) {
+                    $rating = new Rating();
+                    $rating->value = $form_data['rating'][0][$stopIndex];
+                    $rating->user_id = auth()->user()->id; // Aggiungi l'ID dell'utente
+                    $stop->ratings()->save($rating); // Collega la valutazione alla tappa
                 }
             }
         }
-
-        // Reindirizza con un messaggio di successo
-        return redirect()->route('admin.trips.index')->with('success', 'Viaggio creato con successo!');
     }
+
+    // Reindirizza con un messaggio di successo
+    return redirect()->route('admin.trips.index')->with('success', 'Viaggio creato con successo!');
+}
+
+
+
+
+
 
     /**
      * Display the specified resource.
