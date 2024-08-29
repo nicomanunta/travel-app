@@ -144,9 +144,13 @@ class TripController extends Controller
      */
     public function edit(Trip $trip)
     {
-        // Ottieni le giornate e le tappe per il viaggio da modificare
-        $trip->load('days.stops.notes.ratings');
+        $users= User::all();
+
+        
+        $trips = Trip::where('user_id', auth()->id())->get(); 
+        
         return view('admin.trips.edit', compact('trip'));
+        
     }
 
     /**

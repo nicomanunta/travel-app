@@ -29,8 +29,7 @@ class StoreStopRequest extends FormRequest
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'food' => 'nullable|string',
             'curiosities' => 'nullable|string',
-            
-            
+            'location' => 'nullable|string|max:255',  
         ];
     }
     public function messages()
@@ -44,6 +43,8 @@ class StoreStopRequest extends FormRequest
             'image.max' => 'L’immagine non può superare i 2048 KB.',
             'food.string' => 'Il campo cibo deve essere una stringa.',
             'curiosities.string' => 'Il campo curiosità deve essere una stringa.',
+            'location.string' => 'Il campo località deve essere una stringa.',
+            'location.max' => 'Il campo località non può superare i 255 caratteri.',
         ];
     }
 

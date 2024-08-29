@@ -52,7 +52,7 @@
         <h3 class="my-4">Giornate del Viaggio</h3>
         <div id="days-container">
             <div class="day-entry">
-                <input type="" name="day_index[]" value="0">
+                <input type="hidden" name="day_index[]" value="0">
                 <div class="form-group mb-3">
                     <label for="day_title_0">Titolo della Giornata</label>
                     <input type="text" class="form-control @error('day_title.*') is-invalid @enderror" name="day_title[]" value="{{ old('day_title.0') }}" required>
@@ -73,7 +73,7 @@
                 <h3 class="my-4">Tappe della Giornata</h3>
                 <div class="stops-container">
                     <div class="stop-entry">
-                        <input type="" name="stop_day_index[0][]" value="0">
+                        <input type="hidden" name="stop_day_index[0][]" value="0">
                         <div class="form-group mb-3">
                             <label for="stop_title_0">Titolo della Tappa</label>
                             <input type="text" class="form-control @error('stop_title.*') is-invalid @enderror" name="stop_title[0][]" value="{{ old('stop_title.0') }}" required>
@@ -114,6 +114,14 @@
                             @enderror
                         </div>
 
+                        <!-- Località -->
+                        <div class="form-group mb-3">
+                            <label for="location_0">Località</label>
+                            <input type="text" class="form-control @error('location.*') is-invalid @enderror" name="location[0][]" value="{{ old('location.0') }}">
+                            @error('location.*')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
 
                         <!-- Note -->
                         <div class="form-group mb-3">
@@ -153,43 +161,41 @@
 <!-- JavaScript per aggiungere dinamicamente giornate e tappe -->
 <script>
     document.querySelector('.add-day-btn').addEventListener('click', function() {
-    let dayContainer = document.getElementById('days-container');
-    let newDay = document.querySelector('.day-entry').cloneNode(true);
+        let dayContainer = document.getElementById('days-container');
+        let newDay = document.querySelector('.day-entry').cloneNode(true);
 
-    // Azzera i valori degli input per la nuova giornata
-    newDay.querySelectorAll('input, textarea').forEach(input => input.value = '');
+        // Azzera i valori degli input per la nuova giornata
+        newDay.querySelectorAll('input, textarea').forEach(input => input.value = '');
 
-    // Aggiungi un nuovo indice alla giornata
-    let dayIndex = dayContainer.children.length;
-    newDay.querySelectorAll('.stop-entry').forEach(stopEntry => {
-        let stopDayIndexInput = stopEntry.querySelector('input[name="stop_day_index[]"]');
-        if (stopDayIndexInput) {
-            stopDayIndexInput.value = dayIndex;
-        }
+        // Aggiungi un nuovo indice alla giornata
+        let dayIndex = dayContainer.children.length;
+        newDay.querySelectorAll('.stop-entry').forEach(stopEntry => {
+            let stopDayIndexInput = stopEntry.querySelector('input[name="stop_day_index[]"]');
+            if (stopDayIndexInput) {
+                stopDayIndexInput.value = dayIndex;
+            }
+        });
+
+        dayContainer.appendChild(newDay);
     });
 
-    dayContainer.appendChild(newDay);
-});
+    document.querySelectorAll('.add-stop-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            let stopContainer = this.previousElementSibling;
+            let newStop = stopContainer.querySelector('.stop-entry').cloneNode(true);
 
-document.querySelectorAll('.add-stop-btn').forEach(button => {
-    button.addEventListener('click', function() {
-        let stopContainer = this.previousElementSibling;
-        let newStop = stopContainer.querySelector('.stop-entry').cloneNode(true);
+            // Azzera i valori degli input per la nuova tappa
+            newStop.querySelectorAll('input, textarea').forEach(input => input.value = '');
 
-        // Azzera i valori degli input per la nuova tappa
-        newStop.querySelectorAll('input, textarea').forEach(input => input.value = '');
+            // Aggiorna l'indice della giornata per la nuova tappa
+            let dayIndex = Array.from(document.getElementById('days-container').children).indexOf(stopContainer.closest('.day-entry'));
+            let stopDayIndexInput = newStop.querySelector('input[name="stop_day_index[]"]');
+            if (stopDayIndexInput) {
+                stopDayIndexInput.value = dayIndex;
+            }
 
-        // Aggiorna l'indice della giornata per la nuova tappa
-        let dayIndex = Array.from(document.getElementById('days-container').children).indexOf(stopContainer.closest('.day-entry'));
-        let stopDayIndexInput = newStop.querySelector('input[name="stop_day_index[]"]');
-        if (stopDayIndexInput) {
-            stopDayIndexInput.value = dayIndex;
-        }
-
-        stopContainer.appendChild(newStop);
+            stopContainer.appendChild(newStop);
+        });
     });
-});
-
-
 </script>
 @endsection

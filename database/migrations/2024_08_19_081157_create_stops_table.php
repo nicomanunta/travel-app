@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('day_id')->constrained()->onDelete('cascade');
             $table->string('title');
             $table->text('description')->nullable();
+            $table->string('location')->nullable();
             $table->string('image')->nullable();
             $table->text('food')->nullable();
             $table->text('curiosities')->nullable();
