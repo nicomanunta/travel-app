@@ -88,6 +88,7 @@ class TripController extends Controller
                 $stop = new Stop();
                 $stop->title = $form_data['stop_title'][0][$stopIndex] ?? null;
                 $stop->description = $form_data['stop_description'][0][$stopIndex] ?? null;
+                $stop->location = $form_data['location'][0][$stopIndex] ?? null;
                 $stop->food = $form_data['food'][0][$stopIndex] ?? null;
                 $stop->curiosities = $form_data['curiosities'][0][$stopIndex] ?? null;
 
