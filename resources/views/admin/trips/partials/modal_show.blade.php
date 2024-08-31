@@ -1,4 +1,4 @@
-<!-- Modal -->
+
 <div class="modal fade mt-5" id="showModal{{ $trip->id }}" tabindex="-1" aria-labelledby="showModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content border-0 bg-modal">
@@ -6,11 +6,11 @@
                 <h3 class="modal-title font-archivo color-grey shadow-grey" id="showModalLabel">{{ $trip->title }} </h3>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div id="map-{{ $trip->id }}" class="map" style="height: 400px; width: 100%;"></div> <!-- Aggiunto un ID univoco per la mappa -->
+            <div id="map-{{ $trip->id }}" class="map" style="height: 400px; width: 100%;"></div> 
 
             <div class="modal-body bg-color-purple border-0">
                 <div class="container">
-                    <!-- Dettagli del Viaggio -->
+                    
                     <div class="row mb-3">
                         <div class="col-12">
                             <p><strong>Descrizione:</strong> {{ $trip->description }}</p>
@@ -24,13 +24,13 @@
                         </div>
                     </div>
 
-                    <!-- Giornate del Viaggio -->
+                    
                     @foreach ($trip->days as $day)
                         <div class="day-details mb-3">
                             <h5><strong>Giornata:</strong> {{ $day->title }}</h5>
                             <p><strong>Data:</strong> {{ \Carbon\Carbon::parse($day->date)->format('d-m-Y') }}</p>
                             
-                            <!-- Tappe della Giornata -->
+                            
                             @foreach ($day->stops as $stop)
                                 <div class="stop-details mb-2">
                                     <h5><strong>Tappa:</strong> {{ $stop->title }}</h5>
@@ -63,14 +63,31 @@
     </div>
 </div>
 
-<!-- Include del Modal di Eliminazione -->
-@include('admin.trips.partials.modal_delete', ['trip_id' => $trip->id])
-
 <script>
-    // Funzione per inizializzare la mappa
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.modal').forEach(function(modal) {
+            modal.addEventListener('shown.bs.modal', function (event) {
+                var modalId = event.target.id; 
+                var tripId = modalId.replace('showModal', ''); 
+
+                // richiesta AJAX per dati del viaggio
+                fetch(`/admin/trips/${tripId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        
+                        initializeMap(modalId, data.days.flatMap(day => day.stops.map(stop => ({
+                            title: stop.title,
+                            description: stop.description,
+                            address: stop.location
+                        }))));
+                    });
+            });
+        });
+    });
+
     function initializeMap(modalId, locations) {
         var mapElement = document.querySelector('#' + modalId + ' .map');
-        var map = L.map(mapElement).setView([51.505, -0.09], 2); // Centro su una posizione predefinita (mappa globale)
+        var map = L.map(mapElement).setView([51.505, -0.09], 2); 
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -90,27 +107,4 @@
             });
         });
     }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.modal').forEach(function(modal) {
-            modal.addEventListener('shown.bs.modal', function (event) {
-                var modalId = event.target.id;
-
-                // Crea una lista di località con dettagli
-                var locations = [];
-                @foreach ($trip->days as $day)
-                    @foreach ($day->stops as $stop)
-                        locations.push({
-                            title: "{{ $stop->title }}",
-                            description: "{{ $stop->description }}",
-                            address: "{{ $stop->location }}"
-                        });
-                    @endforeach
-                @endforeach
-
-                // Inizializza la mappa con le località
-                initializeMap(modalId, locations);
-            });
-        });
-    });
 </script>

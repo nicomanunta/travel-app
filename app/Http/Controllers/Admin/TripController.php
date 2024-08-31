@@ -13,6 +13,8 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+
 
 class TripController extends Controller
 {
@@ -24,10 +26,10 @@ class TripController extends Controller
     
     public function index()
     {
-        // Recupera solo i viaggi dell'utente autenticato
+       
         $trips = Trip::where('user_id', auth()->id())->get();
 
-        // Passa la variabile $trips alla vista
+       
         return view('admin.trips.index', compact('trips'));
     }
 
@@ -38,7 +40,7 @@ class TripController extends Controller
      */
     public function create()
     {
-        // Ottieni l'utente autenticato per associarlo al viaggio
+        
         $users = User::all();
         
         return view('admin.trips.create', compact('users'));
@@ -50,76 +52,68 @@ class TripController extends Controller
      * @param  \App\Http\Requests\StoreTripRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreTripRequest $request)
-{
-    // Raccogli tutti i dati dal form
-    $form_data = $request->all();
-
-  
-
-
-    // Crea un nuovo oggetto Trip e assegna i dati
-    $trip = new Trip();
-    $trip->title = $form_data['title'];
-    $trip->description = $form_data['description'];
-    $trip->start_date = $form_data['start_date'];
-    $trip->end_date = $form_data['end_date'];
-    $trip->user_id = auth()->user()->id; // Associa il viaggio all'utente autenticato
-
-    // Gestione dell'immagine di copertura (se presente)
-    if ($request->hasFile('cover_image')) {
-        $coverImagePath = $request->file('cover_image')->store('cover_images', 'public');
-        $trip->cover_image = $coverImagePath;
-    }
-
-    // Salva il viaggio nel database
-    $trip->save();
-
-    // Salva le giornate del viaggio
-    foreach ($form_data['day_title'] as $dayIndex => $dayTitle) {
-        $day = new Day();
-        $day->title = $dayTitle;
-        $day->date = $form_data['day_date'][$dayIndex];
-        $trip->days()->save($day); // Collega la giornata al viaggio
-
-        // Salva le tappe della giornata
-        foreach ($form_data['stop_day_index'][0] as $stopIndex => $stopDayIndex) {
-            if ($stopDayIndex == $dayIndex) {
-                $stop = new Stop();
-                $stop->title = $form_data['stop_title'][0][$stopIndex] ?? null;
-                $stop->description = $form_data['stop_description'][0][$stopIndex] ?? null;
-                $stop->location = $form_data['location'][0][$stopIndex] ?? null;
-                $stop->food = $form_data['food'][0][$stopIndex] ?? null;
-                $stop->curiosities = $form_data['curiosities'][0][$stopIndex] ?? null;
-
-                // Gestione dell'immagine della tappa (se presente)
-                if (isset($form_data['stop_image'][0][$stopIndex])) {
-                    $stopImagePath = $form_data['stop_image'][0][$stopIndex]->store('stop_images', 'public');
-                    $stop->image = $stopImagePath;
-                }
-
-                $day->stops()->save($stop); // Collega la tappa alla giornata
-
-                // Salva la nota e la valutazione se presenti
-                if (!empty($form_data['note'][0][$stopIndex])) {
-                    $note = new Note();
-                    $note->content = $form_data['note'][0][$stopIndex];
-                    $stop->notes()->save($note); // Collega la nota alla tappa
-                }
-
-                if (!empty($form_data['rating'][0][$stopIndex])) {
-                    $rating = new Rating();
-                    $rating->value = $form_data['rating'][0][$stopIndex];
-                    $rating->user_id = auth()->user()->id; // Aggiungi l'ID dell'utente
-                    $stop->ratings()->save($rating); // Collega la valutazione alla tappa
+    public function store(Request $request)
+    {
+        
+    
+        $trip = new Trip();
+        $trip->user_id = auth()->id(); 
+        $trip->title = $request->title;
+        $trip->description = $request->description;
+        $trip->start_date = $request->start_date;
+        $trip->end_date = $request->end_date;
+    
+        
+        if ($request->hasFile('cover_image')) {
+            $trip->cover_image = $request->file('cover_image')->store('cover_images', 'public');
+        }
+    
+        $trip->save();
+    
+        foreach ($request->day_title as $dayIndex => $dayTitle) {
+            $day = new Day();
+            $day->title = $dayTitle;
+            $day->date = $request->day_date[$dayIndex];
+            $trip->days()->save($day);
+    
+            if (isset($request->stop_title[$dayIndex])) {
+                foreach ($request->stop_title[$dayIndex] as $stopIndex => $stopTitle) {
+                    $stop = new Stop();
+                    $stop->title = $stopTitle;
+                    $stop->description = $request->stop_description[$dayIndex][$stopIndex] ?? null;
+                    $stop->location = $request->stop_location[$dayIndex][$stopIndex] ?? null;
+    
+                    if ($request->hasFile("stop_image.$dayIndex.$stopIndex")) {
+                        $stop->image = $request->file("stop_image.$dayIndex.$stopIndex")->store('stop_images', 'public');
+                    } else {
+                        $stop->image = null;
+                    }
+    
+                    $stop->food = $request->stop_food[$dayIndex][$stopIndex] ?? null;
+                    $stop->curiosities = $request->stop_curiosities[$dayIndex][$stopIndex] ?? null;
+                    $day->stops()->save($stop);
+    
+                    if (!empty($request->stop_note[$dayIndex][$stopIndex])) {
+                        $note = new Note();
+                        $note->content = $request->stop_note[$dayIndex][$stopIndex];
+                        $stop->notes()->save($note);
+                    }
+    
+                    if (isset($request->rating[$dayIndex][$stopIndex])) {
+                        $rating = new Rating();
+                        $rating->user_id = auth()->id(); 
+                        $rating->stop_id = $stop->id;
+                        $rating->value = $request->rating[$dayIndex][$stopIndex];
+                        $rating->save();
+                    }
                 }
             }
         }
+    
+        return redirect()->route('admin.trips.index');
     }
+    
 
-    // Reindirizza con un messaggio di successo
-    return redirect()->route('admin.trips.index')->with('success', 'Viaggio creato con successo!');
-}
 
 
 
@@ -132,9 +126,10 @@ class TripController extends Controller
      * @param  \App\Models\Trip  $trip
      * @return \Illuminate\Http\Response
      */
-    public function show(Trip $trip)
+    public function show($id)
     {
-        return view('admin.trips.show', compact('trip'));
+        $trip = Trip::with('days.stops')->findOrFail($id);
+        return response()->json($trip);
     }
 
     /**
@@ -163,30 +158,82 @@ class TripController extends Controller
      */
     public function update(UpdateTripRequest $request, Trip $trip)
     {
-        $form_data = $request->all();
+        
+        $validatedData = $request->validated();
 
-        // Aggiorna i dettagli del viaggio
-        $trip->title = $form_data['title'];
-        $trip->description = $form_data['description'];
-        $trip->start_date = $form_data['start_date'];
-        $trip->end_date = $form_data['end_date'];
+        
+        $trip->title = $validatedData['title'];
+        $trip->description = $validatedData['description'];
+        $trip->start_date = $validatedData['start_date'];
+        $trip->end_date = $validatedData['end_date'];
 
-        // Gestione dell'immagine di copertina (se presente)
+        
         if ($request->hasFile('cover_image')) {
-            // Rimuovi l'immagine esistente se ce n'è una
+            
             if ($trip->cover_image) {
                 Storage::disk('public')->delete($trip->cover_image);
             }
-            $coverImagePath = $request->file('cover_image')->store('cover_images', 'public');
-            $trip->cover_image = $coverImagePath;
+            
+            $trip->cover_image = $request->file('cover_image')->store('cover_images', 'public');
         }
 
         $trip->save();
 
-        // Aggiorna le giornate e le tappe (logica non inclusa, dipende dalla struttura del modulo di modifica)
+        
+        $trip->days()->delete(); 
+
+        foreach ($validatedData['days'] as $dayData) {
+            $day = new Day();
+            $day->title = $dayData['title'];
+            $day->date = $dayData['date'];
+            $trip->days()->save($day);
+
+            if (isset($dayData['stops'])) {
+                foreach ($dayData['stops'] as $stopData) {
+                    $stop = new Stop();
+                    $stop->title = $stopData['title'];
+                    $stop->description = $stopData['description'];
+                    $stop->location = $stopData['location'];
+
+                    
+                    if ($request->hasFile("stop_image.{$dayData['id']}.{$stopData['id']}")) {
+                    
+                        if ($stop->image) {
+                            Storage::disk('public')->delete($stop->image);
+                        }
+                        
+                        $stop->image = $request->file("stop_image.{$dayData['id']}.{$stopData['id']}")->store('stop_images', 'public');
+                    } else {
+                        $stop->image = $stopData['image'] ?? null;
+                    }
+
+                    $stop->food = $stopData['food'] ?? null;
+                    $stop->curiosities = $stopData['curiosities'] ?? null;
+                    $day->stops()->save($stop);
+
+                    if (isset($stopData['notes'])) {
+                        foreach ($stopData['notes'] as $noteData) {
+                            $note = new Note();
+                            $note->content = $noteData['content'];
+                            $stop->notes()->save($note);
+                        }
+                    }
+
+                    if (isset($stopData['ratings'])) {
+                        foreach ($stopData['ratings'] as $userId => $ratingValue) {
+                            $rating = Rating::updateOrCreate(
+                                ['stop_id' => $stop->id, 'user_id' => $userId],
+                                ['value' => $ratingValue]
+                            );
+                        }
+                    }
+                }
+            }
+        }
 
         return redirect()->route('admin.trips.index')->with('success', 'Viaggio aggiornato con successo!');
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -196,19 +243,17 @@ class TripController extends Controller
      */
     public function destroy(Trip $trip)
     {
-        // Rimuovi tutte le immagini associate
+        
         if ($trip->cover_image) {
             Storage::disk('public')->delete($trip->cover_image);
         }
 
-        // Rimuovi le giornate, le tappe, le note e le valutazioni
+        
         foreach ($trip->days as $day) {
             foreach ($day->stops as $stop) {
-                // Rimuovi le immagini delle tappe
                 if ($stop->image) {
                     Storage::disk('public')->delete($stop->image);
                 }
-                // Rimuovi note e valutazioni
                 $stop->notes()->delete();
                 $stop->ratings()->delete();
                 $stop->delete();
@@ -216,7 +261,7 @@ class TripController extends Controller
             $day->delete();
         }
 
-        // Rimuovi il viaggio
+        
         $trip->delete();
 
         return redirect()->route('admin.trips.index')->with('success', 'Viaggio eliminato con successo!');

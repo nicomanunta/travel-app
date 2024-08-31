@@ -1,4 +1,4 @@
-<!-- Modal -->
+
 <div class="modal fade mt-5" id="deleteModal{{ $trip->id }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog " style="min-width: 40vw !important">
       <div class="modal-content border-0 bg-modal">

@@ -26,6 +26,7 @@ Route::get('/', function () {
 
 
 Route::get('/dashboard', [TripController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/admin/trips/{id}', [TripController::class, 'show']);
 
 
 Route::middleware(['auth', 'verified'])->name('admin.')->group(function () {

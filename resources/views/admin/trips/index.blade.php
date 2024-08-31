@@ -4,14 +4,14 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <a class="" href="{{ route('admin.trips.create') }}">
-                    <button class="mt-md-0 mt-3 create-button">Nuovo Viaggio</button>
+                <a class="mt-5" href="{{ route('admin.trips.create') }}">
+                    <button class="mt-4 btn-green btn">Nuovo Viaggio</button>
                 </a>
             </div>
         </div>
     </div>
     <div class="container">
-        <h1 class="my-4 text-center">I Tuoi Viaggi</h1>
+        <h1 class="mb-4 text-center">I Tuoi Viaggi</h1>
 
         <table class="table table-striped">
             <thead>
@@ -31,7 +31,7 @@
                         <td>{{ \Carbon\Carbon::parse($trip->start_date)->format('d-m-Y') }}</td>
                         <td>{{ \Carbon\Carbon::parse($trip->end_date)->format('d-m-Y') }}</td>
                         <td>
-                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#showModal{{ $trip->id }}">
+                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#showModal{{ $trip->id }}" data-trip-id="{{ $trip->id }}">
                                 Visualizza
                             </button>
                             <a class="btn btn-warning btn-sm" href="{{ route('admin.trips.edit', ['trip' => $trip->id]) }}">
@@ -45,11 +45,10 @@
                 @endforeach
             </tbody>
         </table>
-
     </div>
 
     @foreach ($trips as $trip)
-        @include('admin.trips.partials.modal_show', ['trip_id' => $trip->id])
+        @include('admin.trips.partials.modal_show', ['trip' => $trip])
         @include('admin.trips.partials.modal_delete', ['trip_id' => $trip->id])
     @endforeach
 @endsection
